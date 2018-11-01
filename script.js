@@ -2,13 +2,13 @@ const player = {}
 
 player.$container = document.querySelector('.player')
 player.$video = player.$container.querySelector('video')
-player.$volumeUp = player.$container.querySelector('.volume-up')
-player.$volumeDown = player.$container.querySelector('.volume-down')
 player.$seek = player.$container.querySelector('.seek')
-player.$fill = player.$container.querySelector('.fill')
+player.$fillTime = player.$seek.querySelector('.fill')
 player.$state = 'Play'
 player.$play = player.$container.querySelector('.play')
 player.$play.innerHTML = player.$state
+player.$volume = player.$container.querySelector('.volume-slider')
+player.$fillVolume = player.$volume.querySelector('.fill')
 
 /*
 //// Play or Pause the video
@@ -30,17 +30,36 @@ player.$play.addEventListener('click', playPauseVideo)
 // event listener on whole video
 player.$video.addEventListener('click', playPauseVideo)
 
+// event lister on spacebar
+window.addEventListener('keydown', (_event) => {
+    const spaceBar = 32
+    if (_event.keyCode == 32) {
+        playPauseVideo()
+    }
+})
+
 /*
-////
+END
 */
 
-player.$volumeDown.addEventListener('click', () => {
-    player.$video.volume = player.$video.volume - 0.1 < 0 ? 0 : player.$video.volume - 0.1
+
+
+/*
+//// Volume Slider
+*/
+
+
+player.$volume.addEventListener('click', (_event) => {
+    const mouseX = _event.clientX
+    const bouding = player.$seek.getBoundingClientRect()
+    const volume = (mouseX - bouding.left) / bouding.width
+    player.$video.volume = volume * 2
+    player.$fillVolume.style.transform = `scaleX(${volume * 2})`
 })
 
-player.$volumeUp.addEventListener('click', () => {
-    player.$video.volume = player.$video.volume + 0.1 > 1 ? 1 : player.$video.volume + 0.1
-})
+/*
+END
+*/
 
 player.$seek.addEventListener('click', (_event) => {
     const mouseX = _event.clientX
@@ -49,7 +68,7 @@ player.$seek.addEventListener('click', (_event) => {
     const time = ratio * player.$video.duration
 
     //Change state button
-    if(player.$state == 'Play') {
+    if (player.$state == 'Play') {
         player.$state = 'Pause'
         player.$play.innerHTML = player.$state
     }
@@ -63,8 +82,12 @@ const loop = () => {
 
     if (!player.$video.paused) {
         const scale = player.$video.currentTime / player.$video.duration
-        player.$fill.style.transform = `scaleX(${scale})`
+        player.$fillTime.style.transform = `scaleX(${scale})`
     }
 }
 
-loop()
+const playerSetup = () => {
+    loop()
+}
+
+playerSetup()

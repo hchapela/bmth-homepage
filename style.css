@@ -16,3 +16,20 @@ body {
     transform: scaleX(0);
     will-change: transform;
 }
+
+.volume-slider {
+    margin: 10px 0;
+    width: 300px;
+    height: 10px;
+    background: #f512ab;
+}
+
+
+.player .volume-slider .fill {
+    width: 100%;
+    height: 100%;
+    background: rgb(68, 0, 255);
+    transform-origin: 0 0;
+    transform: scaleX(1);
+    will-change: transform;
+}
