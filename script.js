@@ -33,7 +33,7 @@ player.$video.addEventListener('click', playPauseVideo)
 // event lister on spacebar
 window.addEventListener('keydown', (_event) => {
     const spaceBar = 32
-    if (_event.keyCode == 32) {
+    if (_event.keyCode == spaceBar) {
         playPauseVideo()
     }
 })
@@ -48,7 +48,7 @@ END
 //// Volume Slider
 */
 
-
+// Volume slider
 player.$volume.addEventListener('click', (_event) => {
     const mouseX = _event.clientX
     const bouding = player.$seek.getBoundingClientRect()
@@ -61,6 +61,12 @@ player.$volume.addEventListener('click', (_event) => {
 END
 */
 
+
+/*
+//// Time Controlling
+*/
+
+// Time Slider
 player.$seek.addEventListener('click', (_event) => {
     const mouseX = _event.clientX
     const bouding = player.$seek.getBoundingClientRect()
@@ -77,6 +83,7 @@ player.$seek.addEventListener('click', (_event) => {
     player.$video.play()
 })
 
+// Make time slider animation soft
 const loop = () => {
     window.requestAnimationFrame(loop)
 
@@ -85,6 +92,26 @@ const loop = () => {
         player.$fillTime.style.transform = `scaleX(${scale})`
     }
 }
+
+// Control time with arrows
+
+window.addEventListener('keydown', (_event) => {
+    const leftArrow = 37
+    const rightArrow = 39
+    if (_event.keyCode == leftArrow) {
+        const newTime = player.$video.currentTime - 10
+        player.$video.currentTime = newTime
+    }
+    else if (_event.keyCode == rightArrow) {
+        const newTime = player.$video.currentTime + 10
+        player.$video.currentTime = newTime
+    }
+})
+
+
+/*
+END
+*/
 
 const playerSetup = () => {
     loop()
