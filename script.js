@@ -1,3 +1,11 @@
+/* TODO 
+
+double click full screen
+full screen
+mute button
+Minute updater (restant?)
+
+*/
 const player = {}
 
 player.$container = document.querySelector('.player')
@@ -9,7 +17,7 @@ player.$play = player.$container.querySelector('.play')
 player.$play.innerHTML = player.$state
 player.$volume = player.$container.querySelector('.volume-slider')
 player.$fillVolume = player.$volume.querySelector('.fill')
-
+player.$timer = player.$container.querySelector('.timer')
 /*
 //// Play or Pause the video
 */
@@ -22,6 +30,7 @@ const playPauseVideo = () => {
 
     // Play or Pause the video
     player.$state == 'Pause' ? player.$video.play() : player.$video.pause()
+    window.setInterval(timeLeft, 1000)
 }
 
 // event listener on button
@@ -81,7 +90,18 @@ player.$seek.addEventListener('click', (_event) => {
 
     player.$video.currentTime = time
     player.$video.play()
+    window.setInterval(timeLeft, 1000)
 })
+
+// Time left counter
+const timeLeft = () => {
+    let minutesLeft = Math.floor((player.$video.duration - player.$video.currentTime) / 60)
+    let secondsLeft = Math.floor(player.$video.duration - player.$video.currentTime) % 60
+
+    if(secondsLeft < 10) { secondsLeft = '0' + secondsLeft }
+
+    player.$timer.innerHTML = `${minutesLeft} : ${secondsLeft}`
+}
 
 // Make time slider animation soft
 const loop = () => {
@@ -114,6 +134,7 @@ END
 */
 
 const playerSetup = () => {
+    // Smooth seek along video
     loop()
 }
 
