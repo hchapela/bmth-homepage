@@ -2,7 +2,6 @@ const player = {}
 
 player.$container = document.querySelector('.player')
 player.$video = player.$container.querySelector('video')
-// player.$pause = player.$container.querySelector('.pause')
 player.$volumeUp = player.$container.querySelector('.volume-up')
 player.$volumeDown = player.$container.querySelector('.volume-down')
 player.$seek = player.$container.querySelector('.seek')
@@ -11,18 +10,29 @@ player.$state = 'Play'
 player.$play = player.$container.querySelector('.play')
 player.$play.innerHTML = player.$state
 
-player.$play.addEventListener('click', () => {
-        //Change state button
-        player.$state = player.$state == 'Pause' ? player.$state = 'Play' : player.$state = 'Pause'
-        player.$play.innerHTML = player.$state
+/*
+//// Play or Pause the video
+*/
 
-        // Play or Pause the video
-        player.$state == 'Pause' ? player.$video.play() : player.$video.pause()
-    })
+//play or pause the video
+const playPauseVideo = () => {
+    //Change state button
+    player.$state = player.$state == 'Pause' ? player.$state = 'Play' : player.$state = 'Pause'
+    player.$play.innerHTML = player.$state
 
-// player.$pause.addEventListener('click', () => {
-//     player.$video.pause()
-// })
+    // Play or Pause the video
+    player.$state == 'Pause' ? player.$video.play() : player.$video.pause()
+}
+
+// event listener on button
+player.$play.addEventListener('click', playPauseVideo)
+
+// event listener on whole video
+player.$video.addEventListener('click', playPauseVideo)
+
+/*
+////
+*/
 
 player.$volumeDown.addEventListener('click', () => {
     player.$video.volume = player.$video.volume - 0.1 < 0 ? 0 : player.$video.volume - 0.1
@@ -38,6 +48,12 @@ player.$seek.addEventListener('click', (_event) => {
     const ratio = (mouseX - bouding.left) / bouding.width
     const time = ratio * player.$video.duration
 
+    //Change state button
+    if(player.$state == 'Play') {
+        player.$state = 'Pause'
+        player.$play.innerHTML = player.$state
+    }
+
     player.$video.currentTime = time
     player.$video.play()
 })
@@ -52,5 +68,3 @@ const loop = () => {
 }
 
 loop()
-
-console.log(player)
