@@ -2,8 +2,7 @@
 
 double click full screen
 full screen
-mute button
-Minute updater (restant?)
+mute buttons
 
 */
 const player = {}
@@ -32,11 +31,13 @@ let fullscreen = false
 //play or pause the video
 const playPauseVideo = () => {
     //Change state button
+    
     player.$state = player.$state == 'Pause' ? player.$state = 'Play' : player.$state = 'Pause'
     player.$play.innerHTML = player.$state
 
     // Play or Pause the video
     player.$state == 'Pause' ? player.$video.play() : player.$video.pause()
+
     window.setInterval(timeLeft, 1000)
 }
 
@@ -45,14 +46,6 @@ player.$play.addEventListener('click', playPauseVideo)
 
 // event listener on whole video
 player.$video.addEventListener('click', playPauseVideo)
-
-// event lister on spacebar
-window.addEventListener('keydown', (_event) => {
-    const spaceBar = 32
-    if (_event.keyCode == spaceBar) {
-        playPauseVideo()
-    }
-})
 
 /*
 END
@@ -137,17 +130,22 @@ const loop = () => {
 window.addEventListener('keydown', (_event) => {
     const leftArrow = 37
     const rightArrow = 39
+    const spaceBar = 32
     if (_event.keyCode == leftArrow) {
+        // go backward in video
         const newTime = player.$video.currentTime - 10
         player.$video.currentTime = newTime
         timeActualisation()
     } else if (_event.keyCode == rightArrow) {
+        // go forward in video
         const newTime = player.$video.currentTime + 10
         player.$video.currentTime = newTime
         timeActualisation()
+    } else if (_event.keyCode == spaceBar) {
+        // Pause or play video on space bar
+        playPauseVideo()
     }
 })
-
 
 /*
 END
@@ -157,8 +155,7 @@ END
 //// Fullscreen
 */
 
-player.$fullscreen.addEventListener('click', () => {
-    // Case not in fullscreen
+const isFullscreen = () => {
     if (!fullscreen) {
         if (player.$container.requestFullscreen) {
             player.$container.requestFullscreen()
@@ -182,8 +179,17 @@ player.$fullscreen.addEventListener('click', () => {
         // disable fullscreen
         fullscreen = false
     }
+}
 
+player.$fullscreen.addEventListener('click', (_event) => {
+    // Case not in fullscreen
+    isFullscreen()
+    // Disable focus on button
+    _event.target.blur()
+})
 
+player.$video.addEventListener('dblclick', () => {
+    isFullscreen()
 })
 
 /*
