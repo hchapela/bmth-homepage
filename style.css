@@ -33,3 +33,8 @@ body {
     transform: scaleX(1);
     will-change: transform;
 }
+
+/* Hide controls webkit player fullscreen */
+*::webkit-media-controls {
+    display: none;
+}

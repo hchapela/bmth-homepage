@@ -1,8 +1,9 @@
 /* TODO 
 
-double click full screen
 full screen
-mute buttons
+Previsualisation
+Mozilla compatibility
+Smooth dragging
 
 */
 const player = {}
@@ -23,6 +24,7 @@ player.$mute.innerHTML = 'Mute'
 player.$fullscreen = player.$container.querySelector('.fullscreen')
 
 let fullscreen = false
+let isDown = false
 
 /*
 //// Play or Pause the video
@@ -31,7 +33,7 @@ let fullscreen = false
 //play or pause the video
 const playPauseVideo = () => {
     //Change state button
-    
+
     player.$state = player.$state == 'Pause' ? player.$state = 'Play' : player.$state = 'Pause'
     player.$play.innerHTML = player.$state
 
@@ -81,22 +83,32 @@ END
 //// Time Controlling
 */
 
-// Time Slider
-player.$seek.addEventListener('click', (_event) => {
-    const mouseX = _event.clientX
+const updatePlayerPosition = (mouseX) => {
     const bouding = player.$seek.getBoundingClientRect()
     const ratio = (mouseX - bouding.left) / bouding.width
-    const time = ratio * player.$video.duration
-
-    //Change state button
-    if (player.$state == 'Play') {
-        player.$state = 'Pause'
-        player.$play.innerHTML = player.$state
-    }
-
+    let time = ratio * player.$video.duration
+    timeActualisation()
     player.$video.currentTime = time
-    player.$video.play()
     window.setInterval(timeLeft, 1000)
+}
+
+// Time Slider
+player.$seek.addEventListener('mousedown', (_event) => {
+    isDown = true
+    player.$video.pause()
+})
+
+document.addEventListener('mouseup', (_event) => {
+    if (player.$state == 'Pause') {
+        player.$video.play()
+    }
+    isDown = false
+})
+
+document.addEventListener('mousemove', (_event) => {
+    if (isDown) {
+        updatePlayerPosition(_event.clientX)
+    }
 })
 
 // Time left counter
@@ -147,6 +159,9 @@ window.addEventListener('keydown', (_event) => {
     }
 })
 
+// Make dragging soft
+
+
 /*
 END
 */
@@ -154,6 +169,16 @@ END
 /*
 //// Fullscreen
 */
+
+const fullscreenOnStyle = () => {
+    player.$video.style.height = '100%'
+    player.$video.style.width = '100%'
+}
+
+const fullscreenOffStyle = () => {
+    // STYLING TO DO
+}
+
 
 const isFullscreen = () => {
     if (!fullscreen) {
@@ -163,9 +188,13 @@ const isFullscreen = () => {
             player.$container.webkitRequestFullscreen()
         } else if (player.$container.msRequestFullscreen) {
             player.$container.msRequestFullscreen()
+        } else if (player.$container.mozRequestFullScreen) {
+            player.$container.mozRequestFullScreen()
         }
-        // enable fullscreen
+        // Enable fullscreen
         fullscreen = true
+        // Enable fullscreen style
+        fullscreenOnStyle()
     }
     // Case fullscreen
     else {
@@ -175,9 +204,13 @@ const isFullscreen = () => {
             document.msExitFullscreen()
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen()
+        } else if (player.$container.mozExitFullScreen) {
+            player.$container.mozExitFullScreen()
         }
         // disable fullscreen
         fullscreen = false
+        // Disable fullscreen style
+        fullscreenOffStyle()
     }
 }
 
