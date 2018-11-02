@@ -3,7 +3,6 @@
 full screen
 Previsualisation
 Mozilla compatibility
-Smooth dragging
 
 */
 const player = {}
@@ -24,8 +23,9 @@ player.$mute.innerHTML = 'Mute'
 player.$fullscreen = player.$container.querySelector('.fullscreen')
 
 let fullscreen = false
-let isDown = false
-
+let isPlayerDown = false
+let isVolumeDown = false
+let beforeMute = 0.5
 /*
 //// Play or Pause the video
 */
@@ -58,22 +58,43 @@ END
 */
 
 // Volume slider
-player.$volume.addEventListener('click', (_event) => {
-    const mouseX = _event.clientX
-    const bouding = player.$seek.getBoundingClientRect()
-    const volume = (mouseX - bouding.left) / bouding.width
-    player.$video.volume = volume * 2
-    player.$fillVolume.style.transform = `scaleX(${volume * 2})`
+const updateSound = (mouseX) => {
+    const bouding = player.$volume.getBoundingClientRect()
+    let volume = (mouseX - bouding.left) / bouding.width
+    if(volume > 1) {
+        volume = 1
+    } else if (volume < 0) {
+        volume = 0
+    }
+    player.$video.volume = volume
+    player.$fillVolume.style.transform = `scaleX(${volume})`
+}
+
+// Sound Slider
+player.$volume.addEventListener('mousedown', (_event) => {
+    isVolumeDown = true
+})
+
+document.addEventListener('mouseup', (_event) => {
+    isVolumeDown = false
+})
+
+document.addEventListener('mousemove', (_event) => {
+    if (isVolumeDown) {
+        updateSound(_event.clientX)
+    }
 })
 
 // Muting video
 player.$mute.addEventListener('click', () => {
-    player.$video.volume = (player.$video.volume) == 0 ? 0.5 : 0
+    // Get the same volume as before muting
+    if(player.$video.volume != 0) {
+        beforeMute = player.$video.volume
+    }
+    player.$video.volume = (player.$video.volume == 0) ? beforeMute : 0
     player.$fillVolume.style.transform = `scaleX(${player.$video.volume})`
     player.$mute.innerHTML = player.$mute.innerHTML == 'Mute' ? 'Muted' : 'Mute'
 })
-
-
 /*
 END
 */
@@ -94,7 +115,7 @@ const updatePlayerPosition = (mouseX) => {
 
 // Time Slider
 player.$seek.addEventListener('mousedown', (_event) => {
-    isDown = true
+    isPlayerDown = true
     player.$video.pause()
 })
 
@@ -102,11 +123,11 @@ document.addEventListener('mouseup', (_event) => {
     if (player.$state == 'Pause') {
         player.$video.play()
     }
-    isDown = false
+    isPlayerDown = false
 })
 
 document.addEventListener('mousemove', (_event) => {
-    if (isDown) {
+    if (isPlayerDown) {
         updatePlayerPosition(_event.clientX)
     }
 })
@@ -179,7 +200,7 @@ const fullscreenOffStyle = () => {
     // STYLING TO DO
 }
 
-
+// Look for what type of request for Exit or Enable Fullscreen
 const isFullscreen = () => {
     if (!fullscreen) {
         if (player.$container.requestFullscreen) {
@@ -190,6 +211,7 @@ const isFullscreen = () => {
             player.$container.msRequestFullscreen()
         } else if (player.$container.mozRequestFullScreen) {
             player.$container.mozRequestFullScreen()
+            // Why mozilla choose to put an Uppercase S ?
         }
         // Enable fullscreen
         fullscreen = true
