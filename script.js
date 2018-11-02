@@ -18,6 +18,9 @@ player.$play.innerHTML = player.$state
 player.$volume = player.$container.querySelector('.volume-slider')
 player.$fillVolume = player.$volume.querySelector('.fill')
 player.$timer = player.$container.querySelector('.timer')
+player.$mute = player.$container.querySelector('.mute')
+player.$mute.innerHTML = 'Mute'
+
 /*
 //// Play or Pause the video
 */
@@ -54,7 +57,7 @@ END
 
 
 /*
-//// Volume Slider
+//// Volume control
 */
 
 // Volume slider
@@ -65,6 +68,14 @@ player.$volume.addEventListener('click', (_event) => {
     player.$video.volume = volume * 2
     player.$fillVolume.style.transform = `scaleX(${volume * 2})`
 })
+
+// Muting video
+player.$mute.addEventListener('click', () => {
+    player.$video.volume = (player.$video.volume) == 0 ? 0.5 : 0
+    player.$fillVolume.style.transform = `scaleX(${player.$video.volume})`
+    player.$mute.innerHTML = player.$mute.innerHTML == 'Mute' ? 'Muted' : 'Mute'
+})
+
 
 /*
 END
@@ -98,9 +109,16 @@ const timeLeft = () => {
     let minutesLeft = Math.floor((player.$video.duration - player.$video.currentTime) / 60)
     let secondsLeft = Math.floor(player.$video.duration - player.$video.currentTime) % 60
 
-    if(secondsLeft < 10) { secondsLeft = '0' + secondsLeft }
+    if (secondsLeft < 10) {
+        secondsLeft = '0' + secondsLeft
+    }
 
     player.$timer.innerHTML = `${minutesLeft} : ${secondsLeft}`
+}
+
+const timeActualisation = () => {
+    const scale = player.$video.currentTime / player.$video.duration
+    player.$fillTime.style.transform = `scaleX(${scale})`
 }
 
 // Make time slider animation soft
@@ -108,8 +126,7 @@ const loop = () => {
     window.requestAnimationFrame(loop)
 
     if (!player.$video.paused) {
-        const scale = player.$video.currentTime / player.$video.duration
-        player.$fillTime.style.transform = `scaleX(${scale})`
+        timeActualisation()
     }
 }
 
@@ -121,10 +138,11 @@ window.addEventListener('keydown', (_event) => {
     if (_event.keyCode == leftArrow) {
         const newTime = player.$video.currentTime - 10
         player.$video.currentTime = newTime
-    }
-    else if (_event.keyCode == rightArrow) {
+        timeActualisation()
+    } else if (_event.keyCode == rightArrow) {
         const newTime = player.$video.currentTime + 10
         player.$video.currentTime = newTime
+        timeActualisation()
     }
 })
 
