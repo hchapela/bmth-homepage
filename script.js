@@ -10,6 +10,7 @@ const player = {}
 
 player.$container = document.querySelector('.player')
 player.$video = player.$container.querySelector('video')
+
 player.$seek = player.$container.querySelector('.seek')
 player.$fillTime = player.$seek.querySelector('.fill')
 player.$state = 'Play'
@@ -20,6 +21,9 @@ player.$fillVolume = player.$volume.querySelector('.fill')
 player.$timer = player.$container.querySelector('.timer')
 player.$mute = player.$container.querySelector('.mute')
 player.$mute.innerHTML = 'Mute'
+player.$fullscreen = player.$container.querySelector('.fullscreen')
+
+let fullscreen = false
 
 /*
 //// Play or Pause the video
@@ -53,8 +57,6 @@ window.addEventListener('keydown', (_event) => {
 /*
 END
 */
-
-
 
 /*
 //// Volume control
@@ -146,6 +148,43 @@ window.addEventListener('keydown', (_event) => {
     }
 })
 
+
+/*
+END
+*/
+
+/*
+//// Fullscreen
+*/
+
+player.$fullscreen.addEventListener('click', () => {
+    // Case not in fullscreen
+    if (!fullscreen) {
+        if (player.$container.requestFullscreen) {
+            player.$container.requestFullscreen()
+        } else if (player.$container.webkitRequestFullscreen && !fullscreen) {
+            player.$container.webkitRequestFullscreen()
+        } else if (player.$container.msRequestFullscreen) {
+            player.$container.msRequestFullscreen()
+        }
+        // enable fullscreen
+        fullscreen = true
+    }
+    // Case fullscreen
+    else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen()
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen()
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen()
+        }
+        // disable fullscreen
+        fullscreen = false
+    }
+
+
+})
 
 /*
 END
