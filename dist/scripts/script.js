@@ -1,17 +1,6 @@
-/* TODO 
-
-full screen
-Previsualisation
-Mozilla compatibility
-
-*/
-
 /* BUG
 
-PLAY SEEK BUG START/END
-SCALE SOUND ON MUTE
 ON PAUSE DOUBLE CLICK NEEDED
-4PX OUTTER VIDEO
 
 */
 
@@ -31,6 +20,7 @@ player.$volumeDrag = player.$volume.querySelector('.volume-drag')
 player.$timer = player.$container.querySelector('.timer')
 player.$mute = player.$container.querySelector('.mute')
 player.$fullscreen = player.$container.querySelector('.fullscreen')
+player.$thumbnail = player.$container.querySelector('.thumbnail')
 
 let fullscreen = false
 let isPlayerDown = false
@@ -267,7 +257,7 @@ const isFullscreen = () => {
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen()
         } else if (player.$container.mozExitFullScreen) {
-            player.$container.mozExitFullScreen()
+            document.mozExitFullScreen()
         }
         // disable fullscreen
         fullscreen = false
@@ -289,6 +279,24 @@ player.$video.addEventListener('dblclick', () => {
     isFullscreen()
     player.$fullscreen.classList.toggle('im-maximize')
     player.$fullscreen.classList.toggle('im-minimize')
+})
+
+/*
+END
+*/
+
+
+/*
+//// Preview Seek Bar
+*/
+
+player.$seek.addEventListener('mousemove', (_event) => {
+    const bounding = player.$video.getBoundingClientRect()
+    const ratio = (_event.clientX - bounding.left) / bounding.width
+    const translate = _event.clientX - bounding.left - 70
+    const timeOver = ratio * player.$video.duration
+    player.$thumbnail.currentTime = timeOver
+    player.$thumbnail.style.transform = `translateX(${translate}px)`
 })
 
 /*
