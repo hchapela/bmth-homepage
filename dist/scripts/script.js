@@ -1,5 +1,5 @@
 /* BUG
-
+i
 ON PAUSE DOUBLE CLICK NEEDED
 
 */
@@ -142,7 +142,8 @@ document.addEventListener('mousemove', (_event) => {
     }
 })
 
-document.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', (_event) => {
+    updatePlayerPosition(_event.clientX)
     if (player.$state == 'Pause') {
         player.$video.play()
     }
