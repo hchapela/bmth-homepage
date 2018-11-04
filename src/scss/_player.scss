@@ -11,6 +11,20 @@
     max-width: 800px;
     position: relative;
     overflow: hidden;
+    box-shadow: -10px 10px 35px 0px rgba(0, 0, 0, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+        cursor: pointer;
+        transition: 0.2s ease-in-out;
+    }
+
+    button:hover {
+        transform: scale(1.1);
+        color: $white;
+    }
 
     .player-video {
         width: 100%;
@@ -28,6 +42,7 @@
         opacity: 0;
         transform: translateY(50px);
         transition: 0.2s ease-in-out;
+        transition-delay: 0.3s;
 
         .seek {
             display: flex;
@@ -37,7 +52,7 @@
             position: absolute;
             width: 100%;
             height: 6px;
-            background: #cccccc;
+            background: $yellow;
             position: absolute;
             transition: 0.2s ease-in-out;
             cursor: pointer;
@@ -59,7 +74,6 @@
                 border-radius: 8px;
                 background: $white;
                 box-shadow: -10px 10px 35px 0px rgba(0, 0, 0, 1);
-                cursor: pointer;
             }
 
             video.thumbnail {
@@ -68,7 +82,7 @@
                 bottom: 30px;
                 box-shadow: -10px 10px 35px 0px rgba(0, 0, 0, 1);
                 opacity: 0;
-                transition: 0.15s cubic-bezier(.47,.42,.41,1.11) opacity;
+                transition: 0.15s cubic-bezier(.47, .42, .41, 1.11) opacity;
             }
         }
 
@@ -90,6 +104,7 @@
             }
 
             .volume-slider {
+                cursor: pointer;
                 margin: 10px 0;
                 margin-left: 5px;
                 width: 100px;
@@ -99,14 +114,13 @@
                 display: flex;
                 align-items: center;
                 border-radius: 5px;
-
+                border-radius: 3px;
                 transition: ease-in 0.2s transform;
 
                 .fill {
                     position: absolute;
                     width: 100%;
                     height: 100%;
-                    border-radius: 3px;
                     background: $yellow;
                     transform-origin: 0 0;
                     transform: scaleX(1);
@@ -121,7 +135,6 @@
                     border-radius: 6px;
                     background: $white;
                     box-shadow: -10px 10px 35px 0px rgba(0, 0, 0, 1);
-                    cursor: pointer;
                 }
             }
 
@@ -140,4 +153,5 @@
 .player:hover .control-bar {
     transform: translateY(0);
     opacity: 0.7;
+    transition-delay: 0s;
 }

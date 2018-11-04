@@ -1,14 +1,8 @@
-/* BUG
-i
-ON PAUSE DOUBLE CLICK NEEDED
-
-*/
-
 const player = {}
 
+// Initiations of the variables
 player.$container = document.querySelector('.player')
 player.$video = player.$container.querySelector('video')
-
 player.$seek = player.$container.querySelector('.seek')
 player.$fillTime = player.$seek.querySelector('.fill')
 player.$seekDrag = player.$seek.querySelector('.seek-drag')
@@ -26,6 +20,7 @@ let fullscreen = false
 let isPlayerDown = false
 let isVolumeDown = false
 let beforeMute = 0.5
+
 /*
 //// Play or Pause the video
 */
@@ -33,14 +28,12 @@ let beforeMute = 0.5
 //play or pause the video
 const playPauseVideo = () => {
     //Change state button
-
     player.$state = player.$state == 'Pause' ? player.$state = 'Play' : player.$state = 'Pause'
     player.$play.classList.toggle('im-play')
     player.$play.classList.toggle('im-pause')
 
     // Play or Pause the video
     player.$state == 'Pause' ? player.$video.play() : player.$video.pause()
-
     window.setInterval(timeLeft, 1000)
 }
 
@@ -142,7 +135,7 @@ document.addEventListener('mousemove', (_event) => {
     }
 })
 
-document.addEventListener('mouseup', (_event) => {
+player.$seek.addEventListener('mouseup', (_event) => {
     updatePlayerPosition(_event.clientX)
     if (player.$state == 'Pause') {
         player.$video.play()
@@ -225,10 +218,6 @@ END
 const fullscreenOnStyle = () => {
     player.$video.style.height = '100%'
     player.$video.style.width = '100%'
-}
-
-const fullscreenOffStyle = () => {
-    // STYLING TO DO
 }
 
 // Look for what type of request for Exit or Enable Fullscreen
