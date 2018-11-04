@@ -3,10 +3,17 @@
 full screen
 Previsualisation
 Mozilla compatibility
-Time forward but not drag element
-drag sound
 
 */
+
+/* BUG
+
+PLAY SEEK BUG START/END
+SCALE SOUND ON MUTE
+ON PAUSE DOUBLE CLICK NEEDED
+
+*/
+
 const player = {}
 
 player.$container = document.querySelector('.player')
@@ -20,6 +27,7 @@ player.$play = player.$container.querySelector('.play')
 player.$play.innerHTML = player.$state
 player.$volume = player.$container.querySelector('.volume-slider')
 player.$fillVolume = player.$volume.querySelector('.fill')
+player.$volumeDrag = player.$volume.querySelector('.volume-drag')
 player.$timer = player.$container.querySelector('.timer')
 player.$mute = player.$container.querySelector('.mute')
 player.$mute.innerHTML = 'Mute'
@@ -71,11 +79,15 @@ const updateSound = (mouseX) => {
     }
     player.$video.volume = volume
     player.$fillVolume.style.transform = `scaleX(${volume})`
+    const boudingFill = player.$fillVolume.getBoundingClientRect()
+    const translate = boudingFill.width - 8
+    player.$volumeDrag.style.transform = `translateX(${translate}px)`
 }
 
 // Sound Slider
 player.$volume.addEventListener('mousedown', (_event) => {
     isVolumeDown = true
+    updateSound(_event.clientX)
 })
 
 document.addEventListener('mouseup', (_event) => {
@@ -89,7 +101,7 @@ document.addEventListener('mousemove', (_event) => {
 })
 
 // Muting video
-player.$mute.addEventListener('click', () => {
+player.$mute.addEventListener('click', (_event) => {
     // Get the same volume as before muting
     if (player.$video.volume != 0) {
         beforeMute = player.$video.volume
@@ -97,6 +109,13 @@ player.$mute.addEventListener('click', () => {
     player.$video.volume = (player.$video.volume == 0) ? beforeMute : 0
     player.$fillVolume.style.transform = `scaleX(${player.$video.volume})`
     player.$mute.innerHTML = player.$mute.innerHTML == 'Mute' ? 'Muted' : 'Mute'
+    if(player.$video.volume == 0) {
+        player.$volumeDrag.style.transform = `translateX(0px)`
+    } else {
+        const translate = (beforeMute * 100) - 8
+        player.$volumeDrag.style.transform = `translateX(${translate}px)`
+    }
+    _event.target.blur()
 })
 /*
 END
@@ -119,10 +138,10 @@ const updatePlayerPosition = (mouseX) => {
 
 // Time Slider
 player.$seek.addEventListener('mousedown', (_event) => {
+    updatePlayerPosition(_event.clientX)
     isPlayerDown = true
     player.$video.pause()
 
-    updatePlayerPosition(_event.clientX)
 })
 
 document.addEventListener('mousemove', (_event) => {
@@ -165,8 +184,8 @@ const timeActualisation = () => {
     }
    
     player.$seekDrag.style.transform = `translateX(${translate}px)`
-
 }
+
 
 // Make time slider animation soft
 const loop = () => {
@@ -198,9 +217,6 @@ window.addEventListener('keydown', (_event) => {
         playPauseVideo()
     }
 })
-
-// Make dragging soft
-
 
 /*
 END

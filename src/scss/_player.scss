@@ -50,7 +50,6 @@
             }
 
             .seek-drag {
-                // display: none;
                 position: absolute;
                 width: 16px;
                 height: 16px;
@@ -65,12 +64,20 @@
             display: flex;
             align-items: center;
 
+            .mute:hover .volume-slider {
+                transform: scaleX(1);
+            }
+
             .volume-slider {
                 margin: 10px 0;
                 width: 100px;
                 height: 10px;
                 background: #f512ab;
                 position: relative;
+                display: flex;
+                align-items: center;
+
+                transition: ease-in 0.2s transform;
 
                 .fill {
                     position: absolute;
@@ -80,6 +87,16 @@
                     transform-origin: 0 0;
                     transform: scaleX(1);
                     will-change: transform;
+                }
+
+                .volume-drag {
+                    transform: translateX(92px);
+                    position: absolute;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 8px;
+                    background: red;
+                    cursor: pointer;
                 }
             }
 
