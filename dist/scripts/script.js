@@ -11,6 +11,7 @@ Mozilla compatibility
 PLAY SEEK BUG START/END
 SCALE SOUND ON MUTE
 ON PAUSE DOUBLE CLICK NEEDED
+4PX OUTTER VIDEO
 
 */
 
@@ -24,13 +25,11 @@ player.$fillTime = player.$seek.querySelector('.fill')
 player.$seekDrag = player.$seek.querySelector('.seek-drag')
 player.$state = 'Play'
 player.$play = player.$container.querySelector('.play')
-player.$play.innerHTML = player.$state
 player.$volume = player.$container.querySelector('.volume-slider')
 player.$fillVolume = player.$volume.querySelector('.fill')
 player.$volumeDrag = player.$volume.querySelector('.volume-drag')
 player.$timer = player.$container.querySelector('.timer')
 player.$mute = player.$container.querySelector('.mute')
-player.$mute.innerHTML = 'Mute'
 player.$fullscreen = player.$container.querySelector('.fullscreen')
 
 let fullscreen = false
@@ -46,7 +45,8 @@ const playPauseVideo = () => {
     //Change state button
 
     player.$state = player.$state == 'Pause' ? player.$state = 'Play' : player.$state = 'Pause'
-    player.$play.innerHTML = player.$state
+    player.$play.classList.toggle('im-play')
+    player.$play.classList.toggle('im-pause')
 
     // Play or Pause the video
     player.$state == 'Pause' ? player.$video.play() : player.$video.pause()
@@ -90,15 +90,16 @@ player.$volume.addEventListener('mousedown', (_event) => {
     updateSound(_event.clientX)
 })
 
-document.addEventListener('mouseup', (_event) => {
-    isVolumeDown = false
-})
-
 document.addEventListener('mousemove', (_event) => {
     if (isVolumeDown) {
         updateSound(_event.clientX)
     }
 })
+
+document.addEventListener('mouseup', (_event) => {
+    isVolumeDown = false
+})
+
 
 // Muting video
 player.$mute.addEventListener('click', (_event) => {
@@ -108,14 +109,15 @@ player.$mute.addEventListener('click', (_event) => {
     }
     player.$video.volume = (player.$video.volume == 0) ? beforeMute : 0
     player.$fillVolume.style.transform = `scaleX(${player.$video.volume})`
-    player.$mute.innerHTML = player.$mute.innerHTML == 'Mute' ? 'Muted' : 'Mute'
     if(player.$video.volume == 0) {
-        player.$volumeDrag.style.transform = `translateX(0px)`
+        player.$volumeDrag.style.transform = `translateX(-8px)`
     } else {
         const translate = (beforeMute * 100) - 8
         player.$volumeDrag.style.transform = `translateX(${translate}px)`
     }
     _event.target.blur()
+    player.$mute.classList.toggle('im-volume')
+    player.$mute.classList.toggle('im-volume-off')
 })
 /*
 END
@@ -186,7 +188,6 @@ const timeActualisation = () => {
     player.$seekDrag.style.transform = `translateX(${translate}px)`
 }
 
-
 // Make time slider animation soft
 const loop = () => {
     window.requestAnimationFrame(loop)
@@ -202,6 +203,7 @@ window.addEventListener('keydown', (_event) => {
     const leftArrow = 37
     const rightArrow = 39
     const spaceBar = 32
+    const fTouch = 70
     if (_event.keyCode == leftArrow) {
         // go backward in video
         const newTime = player.$video.currentTime - 10
@@ -215,6 +217,9 @@ window.addEventListener('keydown', (_event) => {
     } else if (_event.keyCode == spaceBar) {
         // Pause or play video on space bar
         playPauseVideo()
+    }
+    else if(_event.keyCode == fTouch) {
+        isFullscreen()
     }
 })
 
@@ -276,10 +281,14 @@ player.$fullscreen.addEventListener('click', (_event) => {
     isFullscreen()
     // Disable focus on button
     _event.target.blur()
+    player.$fullscreen.classList.toggle('im-maximize')
+    player.$fullscreen.classList.toggle('im-minimize')
 })
 
 player.$video.addEventListener('dblclick', () => {
     isFullscreen()
+    player.$fullscreen.classList.toggle('im-maximize')
+    player.$fullscreen.classList.toggle('im-minimize')
 })
 
 /*
