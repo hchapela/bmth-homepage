@@ -2,6 +2,8 @@
 
 ###### A School project
 
+[Repository here](https://github.com/hchapela/bmth-homepage)
+
 This is a Project we had at School (HETIC). The goal was to build a video or an audio player. I chose to make a video player and to also put it in a simple web page which could be a promotion web page for the next album of a band called Bring Me The Horizon.
 
 The idea was brought to me by [this](https://dribbble.com/shots/5095880-Mantra-Track-Preview) dribbble project : 
@@ -68,13 +70,7 @@ This was a very fun project to do. Also I apologyze for my english
 #####Also I was wondering why Firefox was using an uppercase S in FullScreen, Any idea ?
 
 ` 
-if (player.$container.requestFullscreen) {
-            player.$container.requestFullscreen()
-        } else if (player.$container.webkitRequestFullscreen && !fullscreen) {
-            player.$container.webkitRequestFullscreen()
-        } else if (player.$container.msRequestFullscreen) {
-            player.$container.msRequestFullscreen()
-        } else if (player.$container.mozRequestFullScreen) {
+else if (player.$container.mozRequestFullScreen) {
             player.$container.mozRequestFullScreen()
             // Why mozilla choose to put an Uppercase S ?
         } 
