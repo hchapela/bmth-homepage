@@ -5,28 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dist/styles/style.css">
     <title>Audio video</title>
 </head>
 
 <body>
 
-    <div class="player">
-        <video src="video.mp4" width="600"></video>
-        
-        <button class="play"></button>
-        <button class="mute"></button>
-        <button class="fullscreen">Fullscreen</button>
-        <div class="volume-slider">
-            <div class="fill"></div>
+    <div class="container">
+        <div class="player">
+            <video class="player-video" src="dist/img/video.mp4" width="600"></video>
+
+            <div class="control-bar">
+                <div class="seek">
+                    <div class="fill"></div>
+                    <div class="seek-drag"></div>
+                </div>
+                <div class="control-bar-left">
+                    <button class="play"></button>
+                    <div class="timer">0 : 00</div>
+                    <button class="mute"></button>
+                    <div class="volume-slider">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+
+                <button class="fullscreen">Fullscreen</button>
+
+            </div>
         </div>
-        <div class="seek">
-            <div class="fill"></div>
-        </div>
-        <div class="timer">0 : 00</div>
     </div>
 
-    <script src="script.js"></script>
+
+    <script src="dist/scripts/script.js"></script>
 
 </body>
 
